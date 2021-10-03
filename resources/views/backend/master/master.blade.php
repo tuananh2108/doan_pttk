@@ -1,39 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
+    <title>NuceFood Dashboard | Dashboard</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{asset('backend/img/svg/Logo.svg')}}" type="image/x-icon">
+    <!-- Custom styles -->
     <link rel="stylesheet" href="{{asset('backend/css/main.css')}}">
 </head>
+
 <body>
-    <!-- Menu Section Start -->
-    <div class="menu text-center">
-        <div class="wrapper">
-        <ul>
-                <li><a href="{{asset('admin/home')}}">Trang chủ</a></li>
-                <li><a href="#">Admin</a></li>
-                <li><a href="#">Nhân viên</a></li>
-                <li><a href="{{asset('admin/category')}}">Loại đồ ăn</a></li>
-                <li><a href="{{asset('admin/food')}}">Món ăn</a></li>
-                <li><a href="#">Hóa đơn</a></li>
-                <li><a href="{{asset('/')}}">Trang bán hàng</a></li>
-                <li><a href="{{asset('logout')}}">Đăng xuất</a></li>
+    <div class="layer"></div>
+    <!-- ! Body -->
+    <a class="skip-link sr-only" href="#skip-target">Skip to content</a>
+    <div class="page-flex">
+  <!-- ! Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-start">
+        <div class="sidebar-head">
+            <a href="{{asset('admin/home')}}" class="logo-wrapper" title="Home">
+                <span class="sr-only">Home</span>
+                <span class="icon logo" aria-hidden="true"></span>
+                <div class="logo-text">
+                    <span class="logo-title">NFood</span>
+                    <span class="logo-subtitle">Dashboard</span>
+                </div>
+
+            </a>
+            <button class="sidebar-toggle transparent-btn" title="Menu" type="button">
+                <span class="sr-only">Toggle menu</span>
+                <span class="icon menu-toggle" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="sidebar-body">
+            <ul class="sidebar-body-menu">
+                <li>
+                    <a class="active" href="{{asset('admin/home')}}"><span class="icon home" aria-hidden="true"></span>Trang chủ</a>
+                </li>
+                <li>
+                    <a class="show-cat-btn" href="##">
+                        <span class="icon category" aria-hidden="true"></span>Quản lý loại đồ ăn
+                        <span class="category__btn transparent-btn" title="Open list">
+                            <span class="sr-only">Open list</span>
+                            <span class="icon arrow-down" aria-hidden="true"></span>
+                        </span>
+                    </a>
+                    <ul class="cat-sub-menu">
+                        <li>
+                            <a href="{{asset('admin/category')}}">Danh sách loại đồ ăn</a>
+                        </li>
+                        <li>
+                          <a href="{{asset('admin/category/add')}}">Thêm mới</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                  <a class="show-cat-btn" href="##">
+                      <span class="icon folder" aria-hidden="true"></span>Quản lý món ăn
+                      <span class="category__btn transparent-btn" title="Open list">
+                          <span class="sr-only">Open list</span>
+                          <span class="icon arrow-down" aria-hidden="true"></span>
+                      </span>
+                  </a>
+                  <ul class="cat-sub-menu">
+                      <li>
+                          <a href="{{asset('admin/food')}}">Danh sách món ăn</a>
+                      </li>
+                      <li>
+                          <a href="{{asset('admin/food/add')}}">Thêm mới</a>
+                      </li>
+                  </ul>
+              </li>
+                <li>
+                    <a href="{{asset('admin/customer')}}">
+                        <span class="icon user-3" aria-hidden="true"></span>Quản lý khách hàng
+                    </a>
+                </li>
+                <li>
+                    <a class="show-cat-btn" href="##">
+                        <span class="icon user-2" aria-hidden="true"></span>Quản lý nhân viên
+                        <span class="category__btn transparent-btn" title="Open list">
+                            <span class="sr-only">Open list</span>
+                            <span class="icon arrow-down" aria-hidden="true"></span>
+                        </span>
+                    </a>
+                    <ul class="cat-sub-menu">
+                        <li>
+                            <a href="{{asset('admin/employee')}}">Danh sách nhân viên</a>
+                        </li>
+                        <li>
+                            <a href="{{asset('admin/employee/add')}}">Thêm mới</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{asset('admin/order')}}">
+                        <span class="icon document" aria-hidden="true"></span>Đơn đặt hàng
+                    </a>
+                    <span class="msg-counter">{{$qty_order}}</span>
+                </li>
+            </ul>
+            <span class="system-menu__title">Hệ thống</span>
+            <ul class="sidebar-body-menu">
+                <li>
+                    <a href="{{asset('/')}}"><span class="icon home" aria-hidden="true"></span>Trang bán hàng</a>
+                </li>
+                <li>
+                    <a href="{{asset('admin/user')}}"><span class="icon user-1" aria-hidden="true"></span>Quản lý tài khoản</a>
+                </li>
             </ul>
         </div>
     </div>
-
-    <div class="container">
-        @yield('content') 
+</aside>
+  <div class="main-wrapper">
+    <!-- ! Main nav -->
+    <nav class="main-nav--bg">
+  <div class="container main-nav">
+    <div class="main-nav-start">
     </div>
-
-        <!-- Footer Section Start -->
-    <div class="footer">
-        <div class="wrapper">
-            <p class="text-center">2021 All rights reserved, Food House. Developer By - <a href="https://www.facebook.com/hta2108/"> Hoang Tuan Anh</a></p>
+    <div class="main-nav-end">
+      <button class="sidebar-toggle transparent-btn" title="Menu" type="button">
+        <span class="sr-only">Toggle menu</span>
+        <span class="icon menu-toggle--gray" aria-hidden="true"></span>
+      </button>
+      <button class="theme-switcher gray-circle-btn" type="button" title="Switch theme">
+        <span class="sr-only">Switch theme</span>
+        <i class="sun-icon" data-feather="sun" aria-hidden="true"></i>
+        <i class="moon-icon" data-feather="moon" aria-hidden="true"></i>
+      </button>
+      <div class="nav-user-wrapper">
+        <button href="##" class="nav-user-btn dropdown-btn" title="My profile" type="button">
+          <span class="sr-only">My profile</span>
+          <span class="nav-user-img">
+            <picture><source srcset="{{asset('backend/img/avatar/avatar-illustrated-02.webp')}}" type="image/webp"><img src="{{asset('backend/img/avatar/avatar-illustrated-02.png')}}" alt="User name"></picture>
+          </span>
+        </button>
+        <ul class="users-item-dropdown nav-user-dropdown dropdown">
+          <li><a href="##">
+              <i data-feather="user" aria-hidden="true"></i>
+              <span>Thông tin đăng nhập</span>
+            </a></li>
+          <li><a href="##">
+              <i data-feather="settings" aria-hidden="true"></i>
+              <span>Cài đặt tài khoản</span>
+            </a></li>
+          <li><a class="danger" href="{{asset('logout')}}">
+              <i data-feather="log-out" aria-hidden="true"></i>
+              <span>Đăng xuất</span>
+            </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+    <!-- ! Main -->
+    <main class="main users chart-page" id="skip-target">
+        <div class="container">
+            @yield('content')
         </div>
-    </div>
-    <!-- Footer Section End -->
+    </main>
+    <!-- ! Footer -->
+    <footer class="footer">
+        <div class="container footer--flex">
+            <div class="footer-start">
+                <p>2021 © NuceFood Dashboard</p>
+            </div>
+            <ul class="footer-end">
+                <li><a href="##">About</a></li>
+                <li><a href="##">Support</a></li>
+                <li><a href="##">Puchase</a></li>
+            </ul>
+        </div>
+    </footer>
+  </div>
+</div>
+<!-- Chart library -->
+<script src="{{asset('backend/plugins/chart.min.js')}}"></script>
+<!-- Icons library -->
+<script src="{{asset('backend/plugins/feather.min.js')}}"></script>
+<!-- Custom scripts -->
+<script src="{{asset('backend/js/script.js')}}"></script>
 </body>
+
 </html>

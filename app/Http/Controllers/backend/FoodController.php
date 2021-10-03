@@ -5,7 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\models\food;
+use App\models\{food, order};
 use App\models\category;
 use App\Http\Requests\AddFoodRequest;
 use DB;
@@ -14,12 +14,14 @@ class FoodController extends Controller
 {
     public function getFood()
     {
-        $foods = food::all();
-        return view('backend.food.manageFood')->with('foods', $foods);
+        $data['qty_order'] = count(order::all());
+        $data['foods'] = food::all();
+        return view('backend.food.manageFood', $data);
     }
 
     public function getAddFood()
     {
+        $data['qty_order'] = count(order::all());
         $data['catelist'] = category::all();
         return view('backend.food.addFood', $data);
     }
@@ -48,11 +50,12 @@ class FoodController extends Controller
         $food->active = $request->active;
         $food->save();
         //$request->image->storeAs('img', $filename);
-        return redirect('admin/food');
+        return redirect()->back()->with('success', 'Thêm thành công!');
     }
 
     public function getEditFood($id)
     {
+        $data['qty_order'] = count(order::all());
         $data['food'] = food::find($id);
         $data['categories'] = category::all();
         return view('backend.food.editFood', $data);
@@ -60,7 +63,7 @@ class FoodController extends Controller
 
     public function postEditFood(Request $request, $id)
     {
-        $food = new food;
+        $food = food::find($id);
         $arr['title'] = $request->title;
         $arr['description'] = $request->description;
         $arr['price'] = $request->price;
@@ -76,12 +79,12 @@ class FoodController extends Controller
         $arr['active'] = $request->active;
         $food::where('id', $id)->update($arr);
 
-        return redirect('admin/food');
+        return redirect('admin/food')->with('success', 'Cập nhật thành công!');
     }
 
     public function getDeleteFood($id)
     {
         food::destroy($id);
-        return back();
+        return back()->with('success', 'Xóa thành công!');
     }
 }

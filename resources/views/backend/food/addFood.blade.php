@@ -1,75 +1,70 @@
 @extends('backend.master.master')
 @section('title', 'Thêm món ăn')
 @section('content')
-<div class="main-content">
-        <div class="wrapper">
-            <h1>Add Food</h1>
 
-            <br><br>
-            <!-- Add category Form -->
-            <form action="" method="POST" enctype="multipart/form-data">
-                @csrf
-                @include('errors.note')
-                <table class="tbl-30">
-                    <tr>
-                        <td>Title:</td>
-                        <td><input type="text" name="title" placeholder="Title of the Food."></td>
-                    </tr>
-
-                    <tr>
-                        <td>Description:</td>
-                        <td>
-                            <textarea name="description" id="" cols="30" rows="5" placeholder="Description of the Food."></textarea>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Price:</td>
-                        <td>
-                            <input type="number" name="price">
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Select Image:</td>
-                        <td><input type="file" name="image"></td>
-                    </tr>
-
-                    <tr>
-                        <td>Category</td>
-                        <td>
-                            <select require name="category" id="">
-                                @foreach($catelist as $cate)
+    <h2 class="main-title">Thêm món ăn</h2>
+    @if(session()->has('success'))
+    <div class="message-success">{{session()->get('success')}}</div>
+    @endif
+    <div class="main-edit">
+        <form action="" method="POST" enctype="multipart/form-data">
+        @csrf
+            <table class="table-edit">
+                <tr>
+                    <td>Tên món:</td>
+                    <td>
+                        <input type="text" name="title" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Miêu tả:</td>
+                    <td>
+                        <textarea name="description" id="" cols="40" rows="5" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Đơn giá:</td>
+                    <td>
+                        <input type="number" name="price" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Chọn ảnh:</td>
+                    <td>
+                        <input type="file" name="image" class="table-edit_file" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thuộc loại:</td>
+                    <td>
+                        <select name="category" id="">
+                            @foreach($catelist as $cate)
                                 <option value="{{$cate->id}}">{{$cate->title}}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Featured:</td>
-                        <td>
-                            <input type="radio" name="featured" value="Yes">Yes 
-                            <input type="radio" name="featured" value="No">No 
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Active:</td>
-                        <td>
-                            <input type="radio" name="active" value="Yes">Yes 
-                            <input type="radio" name="active" value="No">No 
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <input type="submit" name="submit" value="Add Food" class="btn-secondary">
-                        </td>
-                    </tr>
-                </table>
-            </form>
-            
-        </div>
+                            @endforeach
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nổi bật:</td>
+                    <td>
+                        <input type="radio" name="featured" value="Yes" required><span>Yes</span>
+                        <input type="radio" name="featured" value="No" required><span>No</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hoạt động:</td>
+                    <td>
+                        <input type="radio" name="active" value="Yes" required><span>Yes</span>
+                        <input type="radio" name="active" value="No" required><span>No</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" name="submit" value="Thêm mới" class="primary-default-btn table-edit_btn">
+                    </td>
+                </tr>
+            </table>
+        </form>
     </div>
+
 @endsection

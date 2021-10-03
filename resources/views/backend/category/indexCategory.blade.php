@@ -1,40 +1,60 @@
 @extends('backend.master.master')
-@section('title','Loại đồ ăn')
 @section('content')
-<div class="main-content">
-    <div class="wrapper">
-        <h1>Manage Category</h1>
-
-        <br/><br/>
-        
-        <!-- Button to Add Admin -->
-        <a href="{{asset('admin/category/add')}}" class="btn-primary">Add Category</a>
-
-        <br/><br/><br/>
-
-        <table class="tbl-full">
-            <tr>
-                <th>S.N.</th>
-                <th>Title</th>
-                <th>Image</th>
-                <th>Featured</th>
-                <th>Active</th>
-                <th>Actions</th>
-            </tr>
-            @foreach($categories as $category)
-            <tr>
-                <td>{{$category->id}}</td>
-                <td>{{$category->title}}</td>
-                <td><img src="{{asset('backend/img/category/'.$category->image)}}" alt="None" width="150px"></td>
-                <td>{{$category->featured}}</td>
-                <td>{{$category->active}}</td>
-                <td>
-                    <a href="{{asset('admin/category/edit/'.$category->id)}}">Update</a>
-                    <a href="{{asset('admin/category/delete/'.$category->id)}}">Delete</a>
-                </td>
-            </tr>
-            @endforeach
-        </table>
+    <h2 class="main-title">Quản lý loại đồ ăn</h2>
+    @if(session()->has('success'))
+    <div class="message-success">{{session()->get('success')}}</div>
+    @endif
+    <div class="row">
+        <div class="col-lg-12">
+        <div class="users-table table-wrapper">
+            <table class="posts-table">
+                <thead>
+                    <tr class="users-table-info">
+                    <th>STT</th>
+                    <th>Tên loại</th>
+                    <th>Ảnh loại</th>
+                    <th>Nổi bật</th>
+                    <th>Hoạt động</th>
+                    <th>Chức năng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($categories as $category)
+                    <tr>
+                    <td>{{$category->id}}.</td>
+                    <td>{{$category->title}}</td>
+                    <td>
+                        <div class="categories-table-img">
+                            <picture><source srcset="{{asset('backend/img/category/'.$category->image)}}" type="image/webp"><img src="{{asset('backend/img/category/'.$category->image)}}" alt="category"></picture>
+                        </div>
+                    </td>
+                    <td>
+                        <label class="users-table__checkbox">
+                            <input @if($category->featured == "Yes") checked @endif type="checkbox" class="check">
+                        </label>
+                    </td>
+                    <td>
+                        <label class="users-table__checkbox">
+                            <input @if($category->active == "Yes") checked @endif type="checkbox" class="check">
+                        </label>
+                    </td>
+                    <td>
+                        <span class="p-relative">
+                        <button class="dropdown-btn transparent-btn" type="button" title="More info">
+                            <div class="sr-only">More info</div>
+                            <i data-feather="more-horizontal" aria-hidden="true"></i>
+                        </button>
+                        <ul class="users-item-dropdown dropdown">
+                            <li><a href="{{asset('admin/category/edit/'.$category->id)}}">Cập nhật</a></li>
+                            <li><a href="{{asset('admin/category/delete/'.$category->id)}}">Xóa</a></li>
+                        </ul>
+                        </span>
+                    </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        </div>
     </div>
-</div>
 @endsection

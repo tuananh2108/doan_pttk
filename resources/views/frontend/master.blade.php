@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <!-- Important to make website responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{asset('backend/img/svg/Logo.svg')}}" type="image/x-icon">
+
     <title>NuceFood|Nơi thỏa sức ăn uống</title>
 
     <!-- Link our CSS file -->
     <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('frontend/fonts/fontawesome-free-5.15.3-web/css/all.css')}}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -23,53 +24,40 @@
             </div>
 
             <div class="menu text-right">
-                <ul>
-                    <li>
+                <ul class="menu_list">
+                    <li class="menu_item">
                         <a href="{{asset('/')}}">Trang chủ</a>
                     </li>
-                    <li>
-                        <a href="{{asset('category/')}}">Đồ ăn</a>
+                    <li class="menu_item">
+                        <a href="{{asset('category/')}}">Loại món ăn</a>
                     </li>
-                    <li>
+                    <li class="menu_item">
                         <a href="{{asset('food/')}}">Món ăn</a>
                     </li>
-                    <li>
-                        <a href="#">Giới thiệu</a>
+                    <li class="menu_item">
+                        <a href="{{asset('cart/')}}"><i class="fa fa-shopping-cart"></i></a>
+                        <span></span>
                     </li>
-                    <li>
-                        <a href="#" class="header__cart-wrap">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="header__cart-notice">0</span>
-                            <div class="header__cart-list">
-                                <ul class="header__cart-list-item">
-                                    <li class="header__cart-item">
-                                        <img src="" alt="" class="header__cart-img">
-                                        <div class="header__cart-item-info">
-                                            <div class="header__cart-item-head">
-                                                <h5 class="header__cart-item-name"></h5>
-                                                <div class="header__cart-item-price-wrap">
-                                                    <span class="header__cart-item-price"></span>
-                                                    <span class="header__cart-item-multiply"></span>
-                                                    <span class="header__cart-item-qnt"></span>
-                                                </div>
-                                            </div>
-                                            <div class="header__cart-item-body">
-                                                <span class="header__cart-item-description">
-                                                </span>
-                                                <span class="header__cart-item-remove"></span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                    <li class="menu_item">
+                    @if(!\Illuminate\Support\Facades\Auth::check())
+                        <a href="{{asset('logout')}}">Đăng nhập</a>  
+                    @else
+                        <div class="user">
+                            <p>{{ Auth::user()->name }}<i class="fas fa-sort-down"></i></p>
+                            <!-- <i class="fas fa-user-circle"></i> -->
+                            <div class="user_list">
+                                <div class="user_item">
+                                    <p><a href="{{asset('user/profile/'.Auth::user()->id)}}">Tài khoản của tôi</a></p>
+                                </div>
+                                <div class="user_item">
+                                    <p><a href="{{asset('user/purchase/'.Auth::user()->id)}}">Đơn Mua</a></p>
+                                </div>
+                                <div class="user_item">
+                                    <p><a href="{{asset('user/check-logout')}}">Đăng xuất</a></p>
+                                </div>
                             </div>
-
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="user_logout">
-                            <i class="user bi bi-person-circle"></i>
-                            <i class="bi bi-caret-down-fill"></i>
-                        </a>
+                        </div>
+                    @endif
                     </li>
                 </ul>
             </div>
@@ -79,7 +67,7 @@
     </section>
     <!-- Navbar Section Ends Here -->
     
-    <div class="container">
+    <div>
         @yield('content') 
     </div>
 
@@ -104,10 +92,143 @@
     <!-- footer Section Starts Here -->
     <section class="footer">
         <div class="container text-center">
-            <p>All rights reserved. Designed By <a href="#">Hoang Tuan Anh</a></p>
+            <p>Thiết kế bởi <a href="#">Group 8</a>.</p>
         </div>
     </section>
     <!-- footer Section Ends Here -->
+
+
+    <script src="{{asset('frontend/js/main.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        //add cart
+        function addToCart(event) {
+            event.preventDefault();
+            let url = $(this).data('url');
+            console.log(url);
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: 'json',
+                success: function(data) {
+                    if(data.code === 200) {
+                        alert('Thêm món ăn vào giỏ hàng thành công!');
+                    }
+                },
+                error: function() {
+
+                }
+            });
+        }
+
+        $(function(){
+            $('.add_to_cart').on('click', addToCart);
+            // $(document).on('click', '.add_to_cart', cartUpdate);
+        });
+
+        //update cart
+        function cartUpdate(event) {
+            event.preventDefault();
+            let url = $('.update_cart_url').data('url');
+            let id = $(this).data('id');
+            let quantity = $(this).parents('tr').find('input.cart-qty').val();
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {id: id, quantity: quantity},
+                success: function(data) {
+                    if(data.code === 200) {
+                        $('body').html(data.cartComponent);
+                        alert('Cập nhật thành công!');
+                    }
+                },
+                error: function() {
+
+                }
+            });
+        }
+
+        //Remove cart
+        function cartRemove(event) {
+            event.preventDefault();
+            let url = $('.remove_cart_url').data('url');
+            let id = $(this).data('id');
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {id: id},
+                success: function(data) {
+                    if(data.code === 200) {
+                        $('body').html(data.cartComponent);
+                        alert('Cập nhật thành công!');
+                    }
+                },
+                error: function() {
+
+                }
+            });
+        }
+
+        $(function() {
+            $(document).on('click', '.cart_update', cartUpdate);
+            $(document).on('click', '.cart_remove', cartRemove);
+        });
+    </script>
+
+    <script>
+        function AddtoCartHome(food_id)
+        {
+            let id = food_id;
+            let path_url = document.URL + 'cart/add/'.concat(id);
+            console.log(path_url);
+            $.ajax({
+                type: "GET",
+                url: path_url,
+                dataType: 'json',
+                success: function(data) {
+                    if(data.code === 200) {
+                        alert('Thêm món ăn vào giỏ hàng thành công!');
+                    }
+                },
+                error: function() {
+
+                }
+            });
+        }
+    </script>
+
+    <!-- load_data -->
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var _token = $('input[name="_token"]').val();
+
+            load_more('', _token);
+
+            function load_more(id = '', _token)
+            {
+                $.ajax({
+                    url:'{{ url('/load-more') }}',
+                    method:"POST",
+                    data:{id:id, _token:_token},
+                    success:function(data)
+                    {
+                        $('#load_more_button').remove();
+                        $('#post_food').append(data);
+                    }
+                })
+            }
+
+            $(document).on('click', '#load_more_button', function(){
+                var id =  $(this).data('id');
+                $('#load_more_button').html('<p>Loading...</p>');
+                load_more(id, _token);
+            });
+        });
+    </script>
 
 </body>
 </html>

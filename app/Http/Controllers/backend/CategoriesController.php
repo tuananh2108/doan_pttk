@@ -4,22 +4,24 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
-use App\models\category;
+use App\models\{category, order};
 use Illuminate\Http\Request;
 use App\Http\Requests\{AddCategoryRequest, EditCategoryRequest};
+use App\Services\PermissionServices;
 
 class CategoriesController extends Controller
 {
     public function getCategory()
     {
-        
-        $categories = category::all();
-        return view('backend.category.indexCategory')->with('categories', $categories);
+        $data['qty_order'] = count(order::all());
+        $data['categories'] = category::all();
+        return view('backend.category.indexCategory', $data);
     }
 
     public function getAddCategory()
     {
-        return view('backend.category.addCategory');
+        $data['qty_order'] = count(order::all());
+        return view('backend.category.addCategory', $data);
     }
 
     public function postAddCategory(AddCategoryRequest $request)
@@ -40,11 +42,12 @@ class CategoriesController extends Controller
         $category->featured=$request->featured;
         $category->active=$request->active;
         $category->save();
-        return back();
+        return redirect()->back()->with('success', 'Thêm thành công!');
     }
 
     public function getEditCategory($id)
     {
+        $data['qty_order'] = count(order::all());
         $data['category'] = category::find($id);
         return view('backend.category.editCategory', $data);
     }
@@ -63,12 +66,12 @@ class CategoriesController extends Controller
         $category->featured=$request->featured;
         $category->active=$request->active;
         $category->save();
-        return redirect()->intended('admin/category');
+        return redirect()->intended('admin/category')->with('success', 'Cập nhật thành công!');
     }
 
     public function getDeleteCategory($id)
     {
         category::destroy($id);
-        return back();
+        return back()->with('success', 'Xóa thành công!');
     }
 }

@@ -1,131 +1,177 @@
-<?php include('partials-front/menu.php'); ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Important to make website responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{asset('backend/img/svg/Logo.svg')}}" type="image/x-icon">
 
-    <?php 
-        if(isset($_GET['food_id'])) {
-            $food_id = $_GET['food_id'];
+    <title>NuceFood|Nơi thỏa sức ăn uống</title>
 
-            //get database
-            $sql = "SELECT * FROM tbl_food WHERE id=$food_id";
-            $res = mysqli_query($conn, $sql);
-            $count = mysqli_num_rows($res);
-            if($count==1) {
-                //we have data
-                $row = mysqli_fetch_assoc($res);
-                $title = $row['title'];
-                $price = $row['price'];
-                $image_name = $row['image_name'];
-            }
-            else {
-                //food not available
-                header('location:'.SITEURL);
-            }
-        }
-        else {
-            header('location:'.SITEURL);
-        }
-    ?>
+    <!-- Link our CSS file -->
+    <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('frontend/fonts/fontawesome-free-5.15.3-web/css/all.css')}}">
+</head>
+<style>
+    #change-infomation {
+        display: none;
+    }
+</style>
 
+<body>
+    <!-- Navbar Section Starts Here -->
+    <section class="navbar">
+        <div class="header">
+            <div class="logo">
+                <a href="{{asset('/')}}">
+                    <img src="{{asset('frontend/img/12.png')}}" alt="Restaurant Logo" class="img-responsive">
+                </a>
+            </div>
+            <p>Thanh Toán</p>
+        </div>
+    </section>
+    <!-- Navbar Section Ends Here -->
 
     <!-- fOOD sEARCH Section Starts Here -->
     <section class="food-search">
         <div class="container">
-            
-            <h2 class="text-center text-white">Fill this form to confirm your order.</h2>
 
-            <form action="" method="POST" class="order">
+            <form action="" method="POST" enctype="multipart/form-data" class="order">
+            @csrf
                 <fieldset>
-                    <legend>Selected Food</legend>
-
-                    <div class="food-menu-img">
-                        <?php 
-                            if($image_name=="") {
-                                echo "<div class='error'>Image not Available.</div>";
-                            }
-                            else {
-                                ?>
-                                    <img src="<?php echo SITEURL; ?>images/food/<?php echo $image_name; ?>" alt="Chicke Hawain Pizza" class="img-responsive img-curve">
-                                <?php
-                            }
-                        ?>
-                    </div>
-    
-                    <div class="food-menu-desc">
-                        <h3><?php echo $title; ?></h3>
-                        <input type="hidden" name="food" value="<?php echo $title; ?>">
-
-                        <p class="food-price"><?php echo $price; ?></p>
-                        <input type="hidden" name="price" value="<?php echo $price; ?>">
+                    <legend>Địa chỉ nhận hàng</legend>
+                    @if(\Illuminate\Support\Facades\Auth::check())
+                        <div class="grow" id="user-auth">
+                            <input type="hidden" name="user_auth" value="1">
+                            <div>
+                                <div>{{ Auth::user()->name }}</div>
+                                <div>{{ Auth::user()->contact }}</div>
+                            </div>
+                            <div>{{ Auth::user()->email }}</div>
+                            <div>{{Auth::user()->address}}</div>
+                            <div class="btn-change" onclick="changeInfomation()">Thay đổi</div>
+                        </div>
                         
+                        <div class="grow" id="change-infomation">
+                            <input type="hidden" name="user_auth" value="2">
+                            <div class="col-2">
+                                <div class="order-label">Họ tên người nhận</div>
+                                <input type="text" name="full_name" placeholder="Ví dụ. Hoàng Tuấn Anh" class="input-responsive" required>
+            
+                                <div class="order-label">Số điện thoại</div>
+                                <input type="tel" name="contact" placeholder="Ví dụ. 0329xxxxxx" class="input-responsive" required>
+                            </div>
+        
+                            <div class="col-2">
+                                <div class="order-label">Email</div>
+                                <input type="email" name="email" placeholder="Ví dụ. htg2182000@gmail.com" class="input-responsive" required>
 
-                        <div class="order-label">Quantity</div>
-                        <input type="number" name="qty" class="input-responsive" value="1" required>
-                        
-                    </div>
+                                <div class="order-label">Địa chỉ nhận hàng</div>
+                                <textarea name="address" rows="1" placeholder="Ví dụ. Ngõ 1, Bùi Xương Trạch, Khương Đình, Thanh Xuân, Hà Nội" class="input-responsive" required></textarea>
+                            </div>
+                        </div>
+                    @else
+                        <div class="grow">
+                            <div class="col-2">
+                                <div class="order-label">Họ tên người nhận</div>
+                                <input type="text" name="full_name" placeholder="Ví dụ. Hoàng Tuấn Anh" class="input-responsive" required>
+            
+                                <div class="order-label">Số điện thoại</div>
+                                <input type="tel" name="contact" placeholder="Ví dụ. 0329xxxxxx" class="input-responsive" required>
+                            </div>
+        
+                            <div class="col-2">
+                                <div class="order-label">Email</div>
+                                <input type="email" name="email" placeholder="Ví dụ. htg2182000@gmail.com" class="input-responsive" required>
+
+                                <div class="order-label">Địa chỉ nhận hàng</div>
+                                <textarea name="address" rows="1" placeholder="Ví dụ. Ngõ 1, Bùi Xương Trạch, Khương Đình, Thanh Xuân, Hà Nội" class="input-responsive" required></textarea>
+                            </div>
+                        </div>
+                    @endif
 
                 </fieldset>
-                
+
                 <fieldset>
-                    <legend>Delivery Details</legend>
-                    <div class="order-label">Full Name</div>
-                    <input type="text" name="full-name" placeholder="E.g. Vijay Thapa" class="input-responsive" required>
+                    <legend>Sản phẩm</legend>
 
-                    <div class="order-label">Phone Number</div>
-                    <input type="tel" name="contact" placeholder="E.g. 9843xxxxxx" class="input-responsive" required>
+                    <table>
+                        <tr>
+                            <th class="text-left">Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
 
-                    <div class="order-label">Email</div>
-                    <input type="email" name="email" placeholder="E.g. hi@vijaythapa.com" class="input-responsive" required>
+                        @php
+                        $total = 0;
+                        @endphp
+                        @foreach($carts as $cart)
+                        @php
+                            $total += $cart['price']*$cart['quantity']; 
+                        @endphp
+                        <tr>
+                            <td class="flex-item">
+                                <img src="{{asset('backend/img/food/'.$cart['image'])}}" alt="" class="food_order-img">
+                                <p class="food_order-title">{{$cart['title']}}</p>
+                            </td>
+                            <td class="text-center">{{number_format($cart['price'])}} VND</td>
+                            <td class="text-center">{{$cart['quantity']}}</td>
+                            <td class="text-center">{{number_format($cart['price']*$cart['quantity'])}} VND</td>
+                        </tr>
+                        @endforeach
 
-                    <div class="order-label">Address</div>
-                    <textarea name="address" rows="10" placeholder="E.g. Street, City, Country" class="input-responsive" required></textarea>
+                    </table>
 
-                    <input type="submit" name="submit" value="Confirm Order" class="btn btn-primary">
+                    <div class="order_pay">
+                        <div class="order_total-payment">
+                            <span class="order_total">Tổng thanh toán:</span>
+                            <span class="order_price" name="total_order">{{number_format($total)}} VND</span>
+                        </div>
+                        <input type="submit" name="submit" value="Đặt Hàng" class="btn btn-primary order_pay-btn">
+                    </div>
+
                 </fieldset>
 
             </form>
-
-            <?php 
-                //check whether submit button
-                if(isset($_POST['submit'])) {
-                    $food = $_POST['food'];
-                    $price = $_POST['price'];
-                    $qty = $_POST['qty'];
-                    $total = $price * $qty;
-                    $order_date = date("Y-m-d h:i:sa");
-                    $status = "Ordered";    //Ordered, On Delivery, Delivered, Cancelled
-                    $customer_name = $_POST['full-name'];
-                    $customer_contact = $_POST['contact'];
-                    $customer_email = $_POST['email'];
-                    $customer_address = $_POST['address'];
-
-                    //Save the Order in Database
-                    //Create SQL to save data
-                    $sql2 = "INSERT INTO tbl_order SET
-                        food = '$food',
-                        price = $price,
-                        qty = $qty,
-                        total = $total,
-                        order_date = '$order_date',
-                        status = '$status',
-                        customer_name = '$customer_name',
-                        customer_contact = '$customer_contact',
-                        customer_email = '$customer_email',
-                        customer_address = '$customer_address'
-                    ";
-
-                    $res2 = mysqli_query($conn, $sql2);
-                    if($res2==true) {
-                        $_SESSION['order'] = "<div class='success text-center'>Food Order Successfully.</div>";
-                        header('location:'.SITEURL);
-                    }
-                    else {
-                        $_SESSION['order'] = "<div class='error text-center'>Failed to Order Food.</div>";
-                        header('location:'.SITEURL);
-                    }
-                }
-            ?>
 
         </div>
     </section>
     <!-- fOOD sEARCH Section Ends Here -->
 
-    <?php include('partials-front/footer.php'); ?>
+    <!-- social Section Starts Here -->
+    <section class="social">
+        <div class="container text-center">
+            <ul>
+                <li>
+                    <a href="#"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png"/></a>
+                </li>
+                <li>
+                    <a href="#"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png"/></a>
+                </li>
+                <li>
+                    <a href="#"><img src="https://img.icons8.com/fluent/48/000000/twitter.png"/></a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <!-- social Section Ends Here -->
+
+    <!-- footer Section Starts Here -->
+    <section class="footer">
+        <div class="container text-center">
+            <p>All rights reserved. Designed By <a href="#">Group 8</a></p>
+        </div>
+    </section>
+    <!-- footer Section Ends Here -->
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function changeInfomation()
+    {
+        $('#change-infomation').css('display', 'flex');
+        $('#user-auth').css('display', 'none');
+    }
+</script>
+</html>

@@ -15,7 +15,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $table = 'tbl_users';
+    protected $table = 'users';
 
     protected $fillable = [
         'email', 'password',
@@ -38,4 +38,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    public function orders()
+    {
+        return $this->hasMany('App\models\order');
+    }
+
+    public function roles()
+    {
+        return $this->belongsTo('App\models\role');
+    }
 }

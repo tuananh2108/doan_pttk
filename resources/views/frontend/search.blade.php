@@ -4,7 +4,7 @@
     <!-- fOOD sEARCH Section Starts Here -->
     <section class="food-search text-center">
         <div class="container">
-            <h2>Foods on Your Search <a href="#" class="text-white">"{{$keyword}}"</a></h2>
+            <h2>Món ăn bạn tìm kiếm <a href="#" class="text-white">"{{$keyword}}"</a></h2>
         </div>
     </section>
     <!-- fOOD sEARCH Section Ends Here -->
@@ -12,20 +12,20 @@
     <!-- fOOD MEnu Section Starts Here -->
     <section class="food-menu">
         <div class="container">
-            <h2 class="text-center">Food Menu</h2>
+            <h2 class="text-center">Thực đơn</h2>
             @foreach($foods as $food)
                 <div class="food-menu-box">
                     <div class="food-menu-img">
-                        <img src="{{asset('backend/img/food/'.$food->image)}}" alt="{{$food->title}}" class="img-responsive img-curve">
+                        <img src="{{asset('backend/img/food/'.$food->image)}}" alt="{{$food->title}}" class="img-responsive img-curve img-food">
                     </div>
 
                     <div class="food-menu-desc">
-                        <h4>{{$food->title}}</h4>
-                        <p class="food-price">{{$food->price}} VND</p>
+                        <h4 class="food-title">{{$food->title}}</h4>
+                        <p class="food-price">{{number_format($food->price)}} VND</p>
                         <p class="food-detail">{{$food->description}}</p>
                         <br>
 
-                        <a href="" class="btn btn-primary">Order Now</a>
+                        <a href="#" data-url="{{asset('cart/add/'.$food->id)}}" class="btn btn-primary add_to_cart">Thêm vào giỏ</a>
                     </div>
                 </div>
             @endforeach
